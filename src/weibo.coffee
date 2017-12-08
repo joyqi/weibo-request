@@ -76,7 +76,7 @@ module.exports = (url, cb) ->
                 title: status.status_title
                 text: status.text
                 plainText: text
-                data: new Date status.created_at
+                date: new Date status.created_at
                 url: 'https://weibo.com/' + status.user.id + '/' + mid
                 thumbnail: status.thumbnail_pic
                 pics: pics
