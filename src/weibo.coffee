@@ -38,7 +38,7 @@ module.exports = (url, cb = null) ->
         id = matches[1]
     else if scheme.host is 'm.weibo.cn'
         # mobile版
-        matches = scheme.pathname.match /^\/status\/([0-9a-z]+)$/
+        matches = scheme.pathname.match /^\/status\/([0-9a-z]+)$/i
         return cb new Error "#{scheme.path} is not a valid path." if not matches
 
         id = matches[1]

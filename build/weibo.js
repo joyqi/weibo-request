@@ -50,7 +50,7 @@
       }
       id = matches[1];
     } else if (scheme.host === 'm.weibo.cn') {
-      matches = scheme.pathname.match(/^\/status\/([0-9a-z]+)$/);
+      matches = scheme.pathname.match(/^\/status\/([0-9a-z]+)$/i);
       if (!matches) {
         return cb(new Error(scheme.path + " is not a valid path."));
       }
