@@ -14,7 +14,7 @@
   URL = require('url');
 
   module.exports = function(url, cb) {
-    var id, matches, mid, promise, reject, resolve, scheme;
+    var id, matches, promise, reject, resolve, scheme;
     if (cb == null) {
       cb = null;
     }
@@ -48,9 +48,9 @@
       if (!matches) {
         return cb(new Error(scheme.path + " is not a valid path."));
       }
-      id = WeiboID.mid2id(matches[1]);
+      id = matches[1];
     } else if (scheme.host === 'm.weibo.cn') {
-      matches = scheme.pathname.match(/^\/status\/([0-9]+)$/);
+      matches = scheme.pathname.match(/^\/status\/([0-9a-z]+)$/);
       if (!matches) {
         return cb(new Error(scheme.path + " is not a valid path."));
       }
@@ -59,7 +59,6 @@
     if (id == null) {
       return cb(new Error('Url is not correct.'));
     }
-    mid = WeiboID.id2mid(id);
     Request({
       uri: 'https://m.weibo.cn/status/' + id,
       timeout: 5000,
@@ -116,7 +115,8 @@
           }
         }
         return cb(null, {
-          id: id,
+          id: status.id,
+          bid: status.bid,
           title: status.status_title,
           text: status.text,
           plainText: text,

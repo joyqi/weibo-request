@@ -35,16 +35,15 @@ module.exports = (url, cb = null) ->
         matches = scheme.pathname.match /^\/[0-9]+\/([0-9a-z]+)$/i
         return cb new Error "#{scheme.path} is not a valid path." if not matches
 
-        id = WeiboID.mid2id matches[1]
+        id = matches[1]
     else if scheme.host is 'm.weibo.cn'
         # mobile版
-        matches = scheme.pathname.match /^\/status\/([0-9]+)$/
+        matches = scheme.pathname.match /^\/status\/([0-9a-z]+)$/
         return cb new Error "#{scheme.path} is not a valid path." if not matches
 
         id = matches[1]
 
     return cb new Error 'Url is not correct.' if not id?
-    mid = WeiboID.id2mid id
 
     # 请求移动版地址
     Request
@@ -91,7 +90,8 @@ module.exports = (url, cb = null) ->
                 pics.push [pic.url, pic.large.url] for pic in status.pics
 
             cb null,
-                id: id
+                id: status.id
+                bid: status.bid
                 title: status.status_title
                 text: status.text
                 plainText: text
