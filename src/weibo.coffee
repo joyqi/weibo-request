@@ -4,7 +4,26 @@ Cheerio = require 'cheerio'
 Request = require 'request'
 URL = require 'url'
 
-module.exports = (url, cb) ->
+module.exports = (url, cb = null) ->
+    promise = null
+
+    if not cb?
+        resolve = null
+        reject = null
+        
+        promise = new Promise (res, rej) ->
+            resolve = res
+            reject = rej
+
+        cb = (err, data = null) ->
+            if err?
+                reject err
+            else
+                resolve data
+
+            promise
+            
+
     # 解析URL
     scheme = URL.parse url
     return cb new Error 'Url is not correct.' if not scheme
@@ -90,4 +109,6 @@ module.exports = (url, cb) ->
                     avatar: status.user.avatar_hd
         catch e
             cb e
+
+    promise
 

@@ -14,7 +14,30 @@
   URL = require('url');
 
   module.exports = function(url, cb) {
-    var id, matches, mid, scheme;
+    var id, matches, mid, promise, reject, resolve, scheme;
+    if (cb == null) {
+      cb = null;
+    }
+    promise = null;
+    if (cb == null) {
+      resolve = null;
+      reject = null;
+      promise = new Promise(function(res, rej) {
+        resolve = res;
+        return reject = rej;
+      });
+      cb = function(err, data) {
+        if (data == null) {
+          data = null;
+        }
+        if (err != null) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+        return promise;
+      };
+    }
     scheme = URL.parse(url);
     if (!scheme) {
       return cb(new Error('Url is not correct.'));
@@ -37,7 +60,7 @@
       return cb(new Error('Url is not correct.'));
     }
     mid = WeiboID.id2mid(id);
-    return Request({
+    Request({
       uri: 'https://m.weibo.cn/status/' + id,
       timeout: 5000,
       headers: {
@@ -116,6 +139,7 @@
         return cb(e);
       }
     });
+    return promise;
   };
 
 }).call(this);
