@@ -121,7 +121,7 @@
           text: status.text,
           plainText: text,
           date: new Date(status.created_at),
-          url: 'https://weibo.com/' + status.user.id + '/' + mid,
+          url: 'https://weibo.com/' + status.user.id + '/' + status.bid,
           thumbnail: status.thumbnail_pic,
           pics: pics,
           reposts: status.reposts_count,
