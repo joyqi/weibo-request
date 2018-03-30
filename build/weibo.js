@@ -13,10 +13,13 @@
 
   URL = require('url');
 
-  module.exports = function(url, cb) {
-    var id, matches, promise, reject, resolve, scheme;
+  module.exports = function(url, cb, cookie) {
+    var headers, id, matches, promise, reject, resolve, scheme;
     if (cb == null) {
       cb = null;
+    }
+    if (cookie == null) {
+      cookie = null;
     }
     promise = null;
     if (cb == null) {
@@ -59,12 +62,16 @@
     if (id == null) {
       return cb(new Error('Url is not correct.'));
     }
+    headers = {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
+    };
+    if (cookie != null) {
+      headers.Cookie = cookie;
+    }
     Request({
       uri: 'https://m.weibo.cn/status/' + id,
       timeout: 5000,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
-      }
+      headers: headers
     }, function(err, response, body) {
       var $, data, e, i, len, pic, pics, ref, script, status, text, vm;
       if (err != null) {

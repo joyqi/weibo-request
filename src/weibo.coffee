@@ -4,7 +4,7 @@ Cheerio = require 'cheerio'
 Request = require 'request'
 URL = require 'url'
 
-module.exports = (url, cb = null) ->
+module.exports = (url, cb = null, cookie = null) ->
     promise = null
 
     if not cb?
@@ -45,12 +45,14 @@ module.exports = (url, cb = null) ->
 
     return cb new Error 'Url is not correct.' if not id?
 
+    headers = 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
+    headers.Cookie = cookie if cookie?
+
     # 请求移动版地址
     Request
         uri: 'https://m.weibo.cn/status/' + id
         timeout: 5000
-        headers:
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
+        headers: headers
     , (err, response, body) ->
         return cb err if err?
         $ = Cheerio.load body
